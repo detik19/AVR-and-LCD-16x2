@@ -47,20 +47,20 @@ void lcdcmd(unsigned char Data)
 }
 void lcdData(unsigned char l)
 {
-	PORTB |=RS;  //because sending data
-	PORTB &=~RW;
-	PORTB  &=~EN;
-	PORTB &= 0x0f;
-	PORTB |=((l ) & 0xf0);
-	PORTB &=~RW;
-	PORTB  |=EN;
+	LCP |=RS;  //because sending data
+	LCP &=~RW;
+	LCP  &=~EN;
+	LDP &= 0x0f;
+	LDP |=((l ) & 0xf0);
+	LCP &=~RW;
+	LCP  |=EN;
 	_delay_ms(2);
-	PORTB  &=~EN;
-	PORTB &= 0x0f;
-	PORTB  |= ((l<<4) &  0xf0);
-	PORTB  |=EN;
+	LCP  &=~EN;
+	LDP &= 0x0f;
+	LDP  |= ((l<<4) &  0xf0);
+	LCP  |=EN;
 	_delay_ms(2);
-	PORTB  &=~EN;
+	LCP  &=~EN;
 
 
 
@@ -83,7 +83,8 @@ void lcd_cmd(unsigned char cmd)	//Sends Command to LCD
 	
 }
 
-void LCDsendChar(unsigned char ch)		//Sends Char to LCD
+
+void lcd_putchar(unsigned char ch)		//Sends Char to LCD
 {
 
 	
@@ -104,6 +105,7 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
 	_delay_ms(1);
 	
 }
+
 void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
 	unsigned char a, pcc;
 	uint16_t i;
@@ -111,7 +113,7 @@ void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
 	for (i=0; i<8; i++){
 		pcc=pgm_read_byte(&pc[i]);
 		lcd_cmd(a++);
-		LCDsendChar(pcc);
+		lcd_putchar(pcc);
 	}
 }
 
@@ -168,7 +170,7 @@ void lcd_clear()
 	
 }
 
-void prints(const char *s)
+void lcd_putsf(const char *s)
 {
 
 	while (*s)

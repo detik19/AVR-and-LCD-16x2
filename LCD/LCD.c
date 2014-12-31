@@ -28,7 +28,7 @@ int main(void)
 	lcd_init();
 	lcd_clear();
 
-	prints("LCD ATMEGA16");
+	lcd_putsf("Halo dari LCD");
 	_delay_ms(500);
  
 		
@@ -37,15 +37,16 @@ int main(void)
 		temp = 12;
 
 		lcd_gotoxy(1,1 );			//set the cursor to 1 column of 1st row
-		prints("Hay!");		
+		lcd_putsf("Hay!");		
 		integerToLcd(temp);		// print adc value to the lcd
 		_delay_ms(500);
 		
 		lcd_clear();
-		prints("bersih123");
+		lcd_putsf("bersih123");
 		
 		_delay_ms(500);
-		
-	
+		lcd_clear();
+		lcd_putchar('x');
+		_delay_ms(500);
 
 }

@@ -3,27 +3,27 @@ LCD.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000047e  00000000  00000000  00000074  2**1
+  0 .text         0000049a  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         0000001c  00800060  0000047e  000004f2  2**0
+  1 .data         0000001e  00800060  0000049a  0000050e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  0000050e  2**0
+  2 .comment      00000030  00000000  00000000  0000052c  2**0
                   CONTENTS, READONLY
-  3 .debug_aranges 00000088  00000000  00000000  0000053e  2**0
+  3 .debug_aranges 00000088  00000000  00000000  0000055c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   00000b0a  00000000  00000000  000005c6  2**0
+  4 .debug_info   00000b76  00000000  00000000  000005e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 000002e6  00000000  00000000  000010d0  2**0
+  5 .debug_abbrev 000002e6  00000000  00000000  0000115a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   00000424  00000000  00000000  000013b6  2**0
+  6 .debug_line   0000042e  00000000  00000000  00001440  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  00000128  00000000  00000000  000017dc  2**2
+  7 .debug_frame  00000128  00000000  00000000  00001870  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    0000024d  00000000  00000000  00001904  2**0
+  8 .debug_str    00000250  00000000  00000000  00001998  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    000004f3  00000000  00000000  00001b51  2**0
+  9 .debug_loc    000004f3  00000000  00000000  00001be8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000068  00000000  00000000  00002044  2**0
+ 10 .debug_ranges 00000068  00000000  00000000  000020db  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -69,16 +69,16 @@ Disassembly of section .text:
   a0:	10 e0       	ldi	r17, 0x00	; 0
   a2:	a0 e6       	ldi	r26, 0x60	; 96
   a4:	b0 e0       	ldi	r27, 0x00	; 0
-  a6:	ee e7       	ldi	r30, 0x7E	; 126
+  a6:	ea e9       	ldi	r30, 0x9A	; 154
   a8:	f4 e0       	ldi	r31, 0x04	; 4
   aa:	02 c0       	rjmp	.+4      	; 0xb0 <__do_copy_data+0x10>
   ac:	05 90       	lpm	r0, Z+
   ae:	0d 92       	st	X+, r0
-  b0:	ac 37       	cpi	r26, 0x7C	; 124
+  b0:	ae 37       	cpi	r26, 0x7E	; 126
   b2:	b1 07       	cpc	r27, r17
   b4:	d9 f7       	brne	.-10     	; 0xac <__do_copy_data+0xc>
   b6:	0e 94 db 01 	call	0x3b6	; 0x3b6 <main>
-  ba:	0c 94 3d 02 	jmp	0x47a	; 0x47a <_exit>
+  ba:	0c 94 4b 02 	jmp	0x496	; 0x496 <_exit>
 
 000000be <__bad_interrupt>:
   be:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -158,25 +158,25 @@ void lcdcmd(unsigned char Data)
 }
 void lcdData(unsigned char l)
 {
-	PORTB |=RS;  //because sending data
+	LCP |=RS;  //because sending data
  110:	c0 9a       	sbi	0x18, 0	; 24
-	PORTB &=~RW;
+	LCP &=~RW;
  112:	c1 98       	cbi	0x18, 1	; 24
-	PORTB  &=~EN;
+	LCP  &=~EN;
  114:	c2 98       	cbi	0x18, 2	; 24
-	PORTB &= 0x0f;
+	LDP &= 0x0f;
  116:	98 b3       	in	r25, 0x18	; 24
  118:	9f 70       	andi	r25, 0x0F	; 15
  11a:	98 bb       	out	0x18, r25	; 24
-	PORTB |=((l ) & 0xf0);
+	LDP |=((l ) & 0xf0);
  11c:	98 b3       	in	r25, 0x18	; 24
  11e:	28 2f       	mov	r18, r24
  120:	20 7f       	andi	r18, 0xF0	; 240
  122:	92 2b       	or	r25, r18
  124:	98 bb       	out	0x18, r25	; 24
-	PORTB &=~RW;
+	LCP &=~RW;
  126:	c1 98       	cbi	0x18, 1	; 24
-	PORTB  |=EN;
+	LCP  |=EN;
  128:	c2 9a       	sbi	0x18, 2	; 24
  12a:	e3 ef       	ldi	r30, 0xF3	; 243
  12c:	f1 e0       	ldi	r31, 0x01	; 1
@@ -185,13 +185,13 @@ void lcdData(unsigned char l)
  132:	00 c0       	rjmp	.+0      	; 0x134 <lcdData+0x24>
  134:	00 00       	nop
 	_delay_ms(2);
-	PORTB  &=~EN;
+	LCP  &=~EN;
  136:	c2 98       	cbi	0x18, 2	; 24
-	PORTB &= 0x0f;
+	LDP &= 0x0f;
  138:	98 b3       	in	r25, 0x18	; 24
  13a:	9f 70       	andi	r25, 0x0F	; 15
  13c:	98 bb       	out	0x18, r25	; 24
-	PORTB  |= ((l<<4) &  0xf0);
+	LDP  |= ((l<<4) &  0xf0);
  13e:	28 b3       	in	r18, 0x18	; 24
  140:	f0 e1       	ldi	r31, 0x10	; 16
  142:	8f 9f       	mul	r24, r31
@@ -199,7 +199,7 @@ void lcdData(unsigned char l)
  146:	11 24       	eor	r1, r1
  148:	82 2b       	or	r24, r18
  14a:	88 bb       	out	0x18, r24	; 24
-	PORTB  |=EN;
+	LCP  |=EN;
  14c:	c2 9a       	sbi	0x18, 2	; 24
  14e:	83 ef       	ldi	r24, 0xF3	; 243
  150:	91 e0       	ldi	r25, 0x01	; 1
@@ -208,7 +208,7 @@ void lcdData(unsigned char l)
  156:	00 c0       	rjmp	.+0      	; 0x158 <lcdData+0x48>
  158:	00 00       	nop
 	_delay_ms(2);
-	PORTB  &=~EN;
+	LCP  &=~EN;
  15a:	c2 98       	cbi	0x18, 2	; 24
  15c:	08 95       	ret
 
@@ -265,8 +265,8 @@ void lcd_cmd(unsigned char cmd)	//Sends Command to LCD
  1a4:	00 00       	nop
  1a6:	08 95       	ret
 
-000001a8 <LCDsendChar>:
-void LCDsendChar(unsigned char ch)		//Sends Char to LCD
+000001a8 <lcd_putchar>:
+void lcd_putchar(unsigned char ch)		//Sends Char to LCD
 {
 
 	
@@ -282,8 +282,8 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
  1b2:	e9 ef       	ldi	r30, 0xF9	; 249
  1b4:	f0 e0       	ldi	r31, 0x00	; 0
  1b6:	31 97       	sbiw	r30, 0x01	; 1
- 1b8:	f1 f7       	brne	.-4      	; 0x1b6 <LCDsendChar+0xe>
- 1ba:	00 c0       	rjmp	.+0      	; 0x1bc <LCDsendChar+0x14>
+ 1b8:	f1 f7       	brne	.-4      	; 0x1b6 <lcd_putchar+0xe>
+ 1ba:	00 c0       	rjmp	.+0      	; 0x1bc <lcd_putchar+0x14>
  1bc:	00 00       	nop
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
@@ -293,8 +293,8 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
  1c2:	e9 ef       	ldi	r30, 0xF9	; 249
  1c4:	f0 e0       	ldi	r31, 0x00	; 0
  1c6:	31 97       	sbiw	r30, 0x01	; 1
- 1c8:	f1 f7       	brne	.-4      	; 0x1c6 <LCDsendChar+0x1e>
- 1ca:	00 c0       	rjmp	.+0      	; 0x1cc <LCDsendChar+0x24>
+ 1c8:	f1 f7       	brne	.-4      	; 0x1c6 <lcd_putchar+0x1e>
+ 1ca:	00 c0       	rjmp	.+0      	; 0x1cc <lcd_putchar+0x24>
  1cc:	00 00       	nop
 	_delay_ms(1);
 	LDP=((ch&0b00001111)<<4);
@@ -310,8 +310,8 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
  1dc:	89 ef       	ldi	r24, 0xF9	; 249
  1de:	90 e0       	ldi	r25, 0x00	; 0
  1e0:	01 97       	sbiw	r24, 0x01	; 1
- 1e2:	f1 f7       	brne	.-4      	; 0x1e0 <LCDsendChar+0x38>
- 1e4:	00 c0       	rjmp	.+0      	; 0x1e6 <LCDsendChar+0x3e>
+ 1e2:	f1 f7       	brne	.-4      	; 0x1e0 <lcd_putchar+0x38>
+ 1e4:	00 c0       	rjmp	.+0      	; 0x1e6 <lcd_putchar+0x3e>
  1e6:	00 00       	nop
 	_delay_ms(1);
 	LCP&=~(1<<LCD_E);
@@ -321,8 +321,8 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
  1ec:	e9 ef       	ldi	r30, 0xF9	; 249
  1ee:	f0 e0       	ldi	r31, 0x00	; 0
  1f0:	31 97       	sbiw	r30, 0x01	; 1
- 1f2:	f1 f7       	brne	.-4      	; 0x1f0 <LCDsendChar+0x48>
- 1f4:	00 c0       	rjmp	.+0      	; 0x1f6 <LCDsendChar+0x4e>
+ 1f2:	f1 f7       	brne	.-4      	; 0x1f0 <lcd_putchar+0x48>
+ 1f4:	00 c0       	rjmp	.+0      	; 0x1f6 <lcd_putchar+0x4e>
  1f6:	00 00       	nop
  1f8:	08 95       	ret
 
@@ -330,6 +330,7 @@ void LCDsendChar(unsigned char ch)		//Sends Char to LCD
 	_delay_ms(1);
 	
 }
+
 void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
  1fa:	ef 92       	push	r14
  1fc:	ff 92       	push	r15
@@ -358,10 +359,10 @@ void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
  21e:	8c 2f       	mov	r24, r28
  220:	8e 0d       	add	r24, r14
  222:	0e 94 af 00 	call	0x15e	; 0x15e <lcd_cmd>
-		LCDsendChar(pcc);
+		lcd_putchar(pcc);
  226:	8f 2d       	mov	r24, r15
- 228:	0e 94 d4 00 	call	0x1a8	; 0x1a8 <LCDsendChar>
-}
+ 228:	0e 94 d4 00 	call	0x1a8	; 0x1a8 <lcd_putchar>
+
 void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
 	unsigned char a, pcc;
 	uint16_t i;
@@ -373,7 +374,7 @@ void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
  232:	89 f7       	brne	.-30     	; 0x216 <LCDdefinechar+0x1c>
 		pcc=pgm_read_byte(&pc[i]);
 		lcd_cmd(a++);
-		LCDsendChar(pcc);
+		lcd_putchar(pcc);
 	}
 }
  234:	df 91       	pop	r29
@@ -523,9 +524,7 @@ void lcd_init(void)//Initializes LCD
  2f0:	08 95       	ret
 
 000002f2 <lcd_clear>:
-	_delay_ms(50);
-}
-*/
+
 void lcd_clear()
 {
 	lcdcmd(1<<LCD_CLR); 
@@ -539,12 +538,12 @@ void lcd_clear()
  302:	00 00       	nop
  304:	08 95       	ret
 
-00000306 <prints>:
+00000306 <lcd_putsf>:
 	_delay_ms(50);
 	
 }
 
-void prints(const char *s)
+void lcd_putsf(const char *s)
 {
  306:	cf 93       	push	r28
  308:	df 93       	push	r29
@@ -553,20 +552,20 @@ void prints(const char *s)
 	while (*s)
  30c:	88 81       	ld	r24, Y
  30e:	88 23       	and	r24, r24
- 310:	31 f0       	breq	.+12     	; 0x31e <prints+0x18>
+ 310:	31 f0       	breq	.+12     	; 0x31e <lcd_putsf+0x18>
  312:	21 96       	adiw	r28, 0x01	; 1
 	{
 		lcdData(*s);
  314:	0e 94 88 00 	call	0x110	; 0x110 <lcdData>
 }
 
-void prints(const char *s)
+void lcd_putsf(const char *s)
 {
 
 	while (*s)
  318:	89 91       	ld	r24, Y+
  31a:	81 11       	cpse	r24, r1
- 31c:	fb cf       	rjmp	.-10     	; 0x314 <prints+0xe>
+ 31c:	fb cf       	rjmp	.-10     	; 0x314 <lcd_putsf+0xe>
 	{
 		lcdData(*s);
 		s++;
@@ -624,7 +623,7 @@ void integerToLcd(int integer )
 	thousands = integer / 1000;
  34c:	68 ee       	ldi	r22, 0xE8	; 232
  34e:	73 e0       	ldi	r23, 0x03	; 3
- 350:	0e 94 15 02 	call	0x42a	; 0x42a <__divmodhi4>
+ 350:	0e 94 23 02 	call	0x446	; 0x446 <__divmodhi4>
  354:	16 2f       	mov	r17, r22
 
 	lcdData(thousands + 0x30);
@@ -646,7 +645,7 @@ void integerToLcd(int integer )
  372:	04 e6       	ldi	r16, 0x64	; 100
  374:	10 e0       	ldi	r17, 0x00	; 0
  376:	b8 01       	movw	r22, r16
- 378:	0e 94 15 02 	call	0x42a	; 0x42a <__divmodhi4>
+ 378:	0e 94 23 02 	call	0x446	; 0x446 <__divmodhi4>
 
 	lcdData( hundreds + 0x30);
  37c:	80 e3       	ldi	r24, 0x30	; 48
@@ -655,11 +654,11 @@ void integerToLcd(int integer )
 	tens=(integer%100)/10;
  384:	ce 01       	movw	r24, r28
  386:	b8 01       	movw	r22, r16
- 388:	0e 94 15 02 	call	0x42a	; 0x42a <__divmodhi4>
+ 388:	0e 94 23 02 	call	0x446	; 0x446 <__divmodhi4>
  38c:	0a e0       	ldi	r16, 0x0A	; 10
  38e:	10 e0       	ldi	r17, 0x00	; 0
  390:	b8 01       	movw	r22, r16
- 392:	0e 94 15 02 	call	0x42a	; 0x42a <__divmodhi4>
+ 392:	0e 94 23 02 	call	0x446	; 0x446 <__divmodhi4>
 
 	lcdData( tens + 0x30);
  396:	80 e3       	ldi	r24, 0x30	; 48
@@ -668,7 +667,7 @@ void integerToLcd(int integer )
 	ones=integer%10;
  39e:	ce 01       	movw	r24, r28
  3a0:	b8 01       	movw	r22, r16
- 3a2:	0e 94 15 02 	call	0x42a	; 0x42a <__divmodhi4>
+ 3a2:	0e 94 23 02 	call	0x446	; 0x446 <__divmodhi4>
 
 	lcdData( ones + 0x30);
  3a6:	80 5d       	subi	r24, 0xD0	; 208
@@ -698,10 +697,10 @@ void integerToLcd(int integer )
 	lcd_clear();
  3be:	0e 94 79 01 	call	0x2f2	; 0x2f2 <lcd_clear>
 
-	prints("LCD ATMEGA16");
+	lcd_putsf("Halo dari LCD");
  3c2:	80 e6       	ldi	r24, 0x60	; 96
  3c4:	90 e0       	ldi	r25, 0x00	; 0
- 3c6:	0e 94 83 01 	call	0x306	; 0x306 <prints>
+ 3c6:	0e 94 83 01 	call	0x306	; 0x306 <lcd_putsf>
  3ca:	2f e7       	ldi	r18, 0x7F	; 127
  3cc:	8a e1       	ldi	r24, 0x1A	; 26
  3ce:	96 e0       	ldi	r25, 0x06	; 6
@@ -720,10 +719,10 @@ void integerToLcd(int integer )
  3dc:	61 e0       	ldi	r22, 0x01	; 1
  3de:	81 e0       	ldi	r24, 0x01	; 1
  3e0:	0e 94 92 01 	call	0x324	; 0x324 <lcd_gotoxy>
-		prints("Hay!");		
- 3e4:	8d e6       	ldi	r24, 0x6D	; 109
+		lcd_putsf("Hay!");		
+ 3e4:	8e e6       	ldi	r24, 0x6E	; 110
  3e6:	90 e0       	ldi	r25, 0x00	; 0
- 3e8:	0e 94 83 01 	call	0x306	; 0x306 <prints>
+ 3e8:	0e 94 83 01 	call	0x306	; 0x306 <lcd_putsf>
 		integerToLcd(temp);		// print adc value to the lcd
  3ec:	8c e0       	ldi	r24, 0x0C	; 12
  3ee:	90 e0       	ldi	r25, 0x00	; 0
@@ -741,10 +740,10 @@ void integerToLcd(int integer )
 		
 		lcd_clear();
  406:	0e 94 79 01 	call	0x2f2	; 0x2f2 <lcd_clear>
-		prints("bersih123");
- 40a:	82 e7       	ldi	r24, 0x72	; 114
+		lcd_putsf("bersih123");
+ 40a:	83 e7       	ldi	r24, 0x73	; 115
  40c:	90 e0       	ldi	r25, 0x00	; 0
- 40e:	0e 94 83 01 	call	0x306	; 0x306 <prints>
+ 40e:	0e 94 83 01 	call	0x306	; 0x306 <lcd_putsf>
  412:	2f e7       	ldi	r18, 0x7F	; 127
  414:	8a e1       	ldi	r24, 0x1A	; 26
  416:	96 e0       	ldi	r25, 0x06	; 6
@@ -756,69 +755,82 @@ void integerToLcd(int integer )
  422:	00 00       	nop
 		
 		_delay_ms(500);
-		
-	
-//   	 }
+		lcd_clear();
+ 424:	0e 94 79 01 	call	0x2f2	; 0x2f2 <lcd_clear>
+		lcd_putchar('x');
+ 428:	88 e7       	ldi	r24, 0x78	; 120
+ 42a:	0e 94 d4 00 	call	0x1a8	; 0x1a8 <lcd_putchar>
+ 42e:	2f e7       	ldi	r18, 0x7F	; 127
+ 430:	8a e1       	ldi	r24, 0x1A	; 26
+ 432:	96 e0       	ldi	r25, 0x06	; 6
+ 434:	21 50       	subi	r18, 0x01	; 1
+ 436:	80 40       	sbci	r24, 0x00	; 0
+ 438:	90 40       	sbci	r25, 0x00	; 0
+ 43a:	e1 f7       	brne	.-8      	; 0x434 <main+0x7e>
+ 43c:	00 c0       	rjmp	.+0      	; 0x43e <main+0x88>
+ 43e:	00 00       	nop
+		_delay_ms(500);
+
 }
- 424:	80 e0       	ldi	r24, 0x00	; 0
- 426:	90 e0       	ldi	r25, 0x00	; 0
- 428:	08 95       	ret
+ 440:	80 e0       	ldi	r24, 0x00	; 0
+ 442:	90 e0       	ldi	r25, 0x00	; 0
+ 444:	08 95       	ret
 
-0000042a <__divmodhi4>:
- 42a:	97 fb       	bst	r25, 7
- 42c:	07 2e       	mov	r0, r23
- 42e:	16 f4       	brtc	.+4      	; 0x434 <__divmodhi4+0xa>
- 430:	00 94       	com	r0
- 432:	07 d0       	rcall	.+14     	; 0x442 <__divmodhi4_neg1>
- 434:	77 fd       	sbrc	r23, 7
- 436:	09 d0       	rcall	.+18     	; 0x44a <__divmodhi4_neg2>
- 438:	0e 94 29 02 	call	0x452	; 0x452 <__udivmodhi4>
- 43c:	07 fc       	sbrc	r0, 7
- 43e:	05 d0       	rcall	.+10     	; 0x44a <__divmodhi4_neg2>
- 440:	3e f4       	brtc	.+14     	; 0x450 <__divmodhi4_exit>
+00000446 <__divmodhi4>:
+ 446:	97 fb       	bst	r25, 7
+ 448:	07 2e       	mov	r0, r23
+ 44a:	16 f4       	brtc	.+4      	; 0x450 <__divmodhi4+0xa>
+ 44c:	00 94       	com	r0
+ 44e:	07 d0       	rcall	.+14     	; 0x45e <__divmodhi4_neg1>
+ 450:	77 fd       	sbrc	r23, 7
+ 452:	09 d0       	rcall	.+18     	; 0x466 <__divmodhi4_neg2>
+ 454:	0e 94 37 02 	call	0x46e	; 0x46e <__udivmodhi4>
+ 458:	07 fc       	sbrc	r0, 7
+ 45a:	05 d0       	rcall	.+10     	; 0x466 <__divmodhi4_neg2>
+ 45c:	3e f4       	brtc	.+14     	; 0x46c <__divmodhi4_exit>
 
-00000442 <__divmodhi4_neg1>:
- 442:	90 95       	com	r25
- 444:	81 95       	neg	r24
- 446:	9f 4f       	sbci	r25, 0xFF	; 255
- 448:	08 95       	ret
+0000045e <__divmodhi4_neg1>:
+ 45e:	90 95       	com	r25
+ 460:	81 95       	neg	r24
+ 462:	9f 4f       	sbci	r25, 0xFF	; 255
+ 464:	08 95       	ret
 
-0000044a <__divmodhi4_neg2>:
- 44a:	70 95       	com	r23
- 44c:	61 95       	neg	r22
- 44e:	7f 4f       	sbci	r23, 0xFF	; 255
+00000466 <__divmodhi4_neg2>:
+ 466:	70 95       	com	r23
+ 468:	61 95       	neg	r22
+ 46a:	7f 4f       	sbci	r23, 0xFF	; 255
 
-00000450 <__divmodhi4_exit>:
- 450:	08 95       	ret
+0000046c <__divmodhi4_exit>:
+ 46c:	08 95       	ret
 
-00000452 <__udivmodhi4>:
- 452:	aa 1b       	sub	r26, r26
- 454:	bb 1b       	sub	r27, r27
- 456:	51 e1       	ldi	r21, 0x11	; 17
- 458:	07 c0       	rjmp	.+14     	; 0x468 <__udivmodhi4_ep>
+0000046e <__udivmodhi4>:
+ 46e:	aa 1b       	sub	r26, r26
+ 470:	bb 1b       	sub	r27, r27
+ 472:	51 e1       	ldi	r21, 0x11	; 17
+ 474:	07 c0       	rjmp	.+14     	; 0x484 <__udivmodhi4_ep>
 
-0000045a <__udivmodhi4_loop>:
- 45a:	aa 1f       	adc	r26, r26
- 45c:	bb 1f       	adc	r27, r27
- 45e:	a6 17       	cp	r26, r22
- 460:	b7 07       	cpc	r27, r23
- 462:	10 f0       	brcs	.+4      	; 0x468 <__udivmodhi4_ep>
- 464:	a6 1b       	sub	r26, r22
- 466:	b7 0b       	sbc	r27, r23
+00000476 <__udivmodhi4_loop>:
+ 476:	aa 1f       	adc	r26, r26
+ 478:	bb 1f       	adc	r27, r27
+ 47a:	a6 17       	cp	r26, r22
+ 47c:	b7 07       	cpc	r27, r23
+ 47e:	10 f0       	brcs	.+4      	; 0x484 <__udivmodhi4_ep>
+ 480:	a6 1b       	sub	r26, r22
+ 482:	b7 0b       	sbc	r27, r23
 
-00000468 <__udivmodhi4_ep>:
- 468:	88 1f       	adc	r24, r24
- 46a:	99 1f       	adc	r25, r25
- 46c:	5a 95       	dec	r21
- 46e:	a9 f7       	brne	.-22     	; 0x45a <__udivmodhi4_loop>
- 470:	80 95       	com	r24
- 472:	90 95       	com	r25
- 474:	bc 01       	movw	r22, r24
- 476:	cd 01       	movw	r24, r26
- 478:	08 95       	ret
+00000484 <__udivmodhi4_ep>:
+ 484:	88 1f       	adc	r24, r24
+ 486:	99 1f       	adc	r25, r25
+ 488:	5a 95       	dec	r21
+ 48a:	a9 f7       	brne	.-22     	; 0x476 <__udivmodhi4_loop>
+ 48c:	80 95       	com	r24
+ 48e:	90 95       	com	r25
+ 490:	bc 01       	movw	r22, r24
+ 492:	cd 01       	movw	r24, r26
+ 494:	08 95       	ret
 
-0000047a <_exit>:
- 47a:	f8 94       	cli
+00000496 <_exit>:
+ 496:	f8 94       	cli
 
-0000047c <__stop_program>:
- 47c:	ff cf       	rjmp	.-2      	; 0x47c <__stop_program>
+00000498 <__stop_program>:
+ 498:	ff cf       	rjmp	.-2      	; 0x498 <__stop_program>

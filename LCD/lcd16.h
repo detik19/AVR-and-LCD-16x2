@@ -38,9 +38,10 @@ void lcd_gotoxy(unsigned char  ,unsigned char );
 void lcd_init(void);
 void lcd_cmd(unsigned char);
 void lcdData(unsigned char);
+void lcd_putchar(unsigned char ch);
 void lcdWriteNibble(unsigned char);
 void waitlcd(unsigned char);
-void prints(const char * message);
+void lcd_putsf(const char * message);
 void lcd_clear(void);				//Clears LCD
 void LCDdefinechar(const uint8_t *,uint8_t);//write char to LCD CGRAM
 
