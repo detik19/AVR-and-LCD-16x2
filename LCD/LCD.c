@@ -38,7 +38,7 @@ int main(void)
 
 		lcd_gotoxy(1,1 );			//set the cursor to 1 column of 1st row
 		lcd_putsf("Hay!");		
-		integerToLcd(temp);		// print adc value to the lcd
+		lcd_putInt(temp);		// print adc value to the lcd
 		_delay_ms(500);
 		
 		lcd_clear();
@@ -46,7 +46,7 @@ int main(void)
 		
 		_delay_ms(500);
 		lcd_clear();
-		lcd_putchar('x');
+		lcd_putchar('g');
 		_delay_ms(500);
 
 }

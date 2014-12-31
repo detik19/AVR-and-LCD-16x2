@@ -22,6 +22,7 @@ const uint8_t LcdCustomChar[] PROGMEM=//define 8 custom LCD chars
 	0x18, 0x1C, 0x1E, 0x1F, 0x1E, 0x1C, 0x18, 0x00  // 7. fast-forward arrow
 };
 
+/*
 void lcdcmd(unsigned char Data)
 {
 
@@ -45,6 +46,8 @@ void lcdcmd(unsigned char Data)
 
 
 }
+*/
+/*
 void lcdData(unsigned char l)
 {
 	LCP |=RS;  //because sending data
@@ -65,6 +68,7 @@ void lcdData(unsigned char l)
 
 
 }
+*/
 
 void lcd_cmd(unsigned char cmd)	//Sends Command to LCD
 {
@@ -165,7 +169,7 @@ void lcd_init(void)//Initializes LCD
 
 void lcd_clear()
 {
-	lcdcmd(1<<LCD_CLR); 
+	lcd_cmd(1<<LCD_CLR); 
 	_delay_ms(50);
 	
 }
@@ -175,7 +179,7 @@ void lcd_putsf(const char *s)
 
 	while (*s)
 	{
-		lcdData(*s);
+		lcd_putchar(*s);
 		s++;
 	}
 }
@@ -209,21 +213,21 @@ void lcd_gotoxy(unsigned char  x,unsigned char y)
 
 }
 */
-void integerToLcd(int integer )
+void lcd_putInt(int integer )
 {
 
 	unsigned char thousands,hundreds,tens,ones;
 	thousands = integer / 1000;
 
-	lcdData(thousands + 0x30);
+	lcd_putchar(thousands + 0x30);
 
 	hundreds = ((integer - thousands*1000)-1) / 100;
 
-	lcdData( hundreds + 0x30);
+	lcd_putchar( hundreds + 0x30);
 	tens=(integer%100)/10;
 
-	lcdData( tens + 0x30);
+	lcd_putchar( tens + 0x30);
 	ones=integer%10;
 
-	lcdData( ones + 0x30);
+	lcd_putchar( ones + 0x30);
 }

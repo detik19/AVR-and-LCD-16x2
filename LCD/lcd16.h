@@ -5,9 +5,9 @@
 #include <avr/io.h>
 
 
-#define RS  0x01
-#define EN  0x04
-#define RW  0x02
+//#define RS  0x01
+//#define EN  0x04
+//#define RW  0x02
 
 #define LCD_CLR             0	//DB0: clear display
 
@@ -37,13 +37,12 @@ void lcd_gotoxy(unsigned char  ,unsigned char );
 
 void lcd_init(void);
 void lcd_cmd(unsigned char);
-void lcdData(unsigned char);
 void lcd_putchar(unsigned char ch);
-void lcdWriteNibble(unsigned char);
-void waitlcd(unsigned char);
 void lcd_putsf(const char * message);
 void lcd_clear(void);				//Clears LCD
-void LCDdefinechar(const uint8_t *,uint8_t);//write char to LCD CGRAM
+void lcd_putInt(int  );
 
-void integerToLcd(int  );
+void LCDdefinechar(const unsigned char *pc,unsigned char char_code);//write char to LCD CGRAM
+void waitlcd(unsigned char);
+void lcdWriteNibble(unsigned char);
 #endif
