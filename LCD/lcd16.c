@@ -66,7 +66,7 @@ void lcdData(unsigned char l)
 
 }
 
-void LCDsendCommand(uint8_t cmd)	//Sends Command to LCD
+void lcd_cmd(unsigned char cmd)	//Sends Command to LCD
 {
 	
 	//4 bit part
@@ -83,7 +83,7 @@ void LCDsendCommand(uint8_t cmd)	//Sends Command to LCD
 	
 }
 
-void LCDsendChar(uint8_t ch)		//Sends Char to LCD
+void LCDsendChar(unsigned char ch)		//Sends Char to LCD
 {
 
 	
@@ -104,13 +104,13 @@ void LCDsendChar(uint8_t ch)		//Sends Char to LCD
 	_delay_ms(1);
 	
 }
-void LCDdefinechar(const uint8_t *pc,uint8_t char_code){
-	uint8_t a, pcc;
+void LCDdefinechar(const unsigned char *pc,unsigned char char_code){
+	unsigned char a, pcc;
 	uint16_t i;
 	a=(char_code<<3)|0x40;
 	for (i=0; i<8; i++){
 		pcc=pgm_read_byte(&pc[i]);
-		LCDsendCommand(a++);
+		lcd_cmd(a++);
 		LCDsendChar(pcc);
 	}
 }
@@ -143,11 +143,11 @@ void lcd_init(void)//Initializes LCD
 	LCP&=~(1<<LCD_E);
 	_delay_ms(1);
 	//--------4 bit--dual line---------------
-	LCDsendCommand(0b00101000);
+	lcd_cmd(0b00101000);
 	//-----increment address, invisible cursor shift------
-	LCDsendCommand(0b00001100);
+	lcd_cmd(0b00001100);
 	//init 8 custom chars
-	uint8_t ch=0, chn=0;
+	unsigned char ch=0, chn=0;
 	while(ch<64)
 	{
 		LCDdefinechar((LcdCustomChar+ch),chn++);
@@ -160,39 +160,7 @@ void lcd_init(void)//Initializes LCD
 
 	
 }
-/*
-void lcdInit(void)
-{
-	PORTB &=~RS;
-	PORTB  &=~EN;
-	PORTB &=~RW;
-	PORTB |= 0x30;
-	_delay_ms(40);
-	PORTB  |=EN;
-	PORTB  &=~EN;
-	_delay_ms(5);
-	PORTB  |=EN;
-	PORTB  &=~EN;
-	_delay_ms(5);
-	PORTB  |=EN;
-	PORTB  &=~EN;
-	_delay_ms(2);
 
-	PORTB &= 0x20;
-	PORTB  |=EN;
-	PORTB  &=~EN;
-	lcdcmd(0x28);   //set data length 4 bit 2 line
-	_delay_ms(50);
-	lcdcmd(0x0E);   // set display on cursor on blink on
-	_delay_ms(50);
-	lcdcmd(0x01); // clear lcd
-	_delay_ms(50);
-	lcdcmd(0x06);  // cursor shift direction
-	_delay_ms(50);
-	lcdcmd(0x80);  //set ram address
-	_delay_ms(50);
-}
-*/
 void lcd_clear()
 {
 	lcdcmd(1<<LCD_CLR); 
@@ -210,7 +178,25 @@ void prints(const char *s)
 	}
 }
 
-void gotoXy(unsigned char  x,unsigned char y)
+void lcd_gotoxy(unsigned char x, unsigned char y)	//Cursor to X Y position
+{
+	register unsigned char DDRAMAddr;
+	// remap lines into proper order
+	switch(y)
+	{
+		case 0: DDRAMAddr = LCD_LINE0_DDRAMADDR+x; break;
+		case 1: DDRAMAddr = LCD_LINE1_DDRAMADDR+x; break;
+		case 2: DDRAMAddr = LCD_LINE2_DDRAMADDR+x; break;
+		case 3: DDRAMAddr = LCD_LINE3_DDRAMADDR+x; break;
+		default: DDRAMAddr = LCD_LINE0_DDRAMADDR+x;
+	}
+	// set data address
+	lcd_cmd(1<<LCD_DDRAM | DDRAMAddr);
+	
+}
+
+/*
+void lcd_gotoxy(unsigned char  x,unsigned char y)
 {
 	if(x<40)
 	{
@@ -220,6 +206,7 @@ void gotoXy(unsigned char  x,unsigned char y)
 	}
 
 }
+*/
 void integerToLcd(int integer )
 {
 

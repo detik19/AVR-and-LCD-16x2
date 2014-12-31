@@ -30,14 +30,13 @@ int main(void)
 
 	prints("LCD ATMEGA16");
 	_delay_ms(500);
-    //	while(1)
-    //	{	
+ 
 		
 		
 		
 		temp = 12;
 
-		gotoXy(1,1 );			//set the cursor to 1 column of 1st row
+		lcd_gotoxy(1,1 );			//set the cursor to 1 column of 1st row
 		prints("Hay!");		
 		integerToLcd(temp);		// print adc value to the lcd
 		_delay_ms(500);
@@ -48,5 +47,5 @@ int main(void)
 		_delay_ms(500);
 		
 	
-//   	 }
+
 }

@@ -24,10 +24,19 @@
 #define LCD_D6	6	//define MCU pin connected to LCD D5
 #define LCD_D7	7	//define MCU pin connected to LCD D6
 
-void gotoXy(unsigned char  ,unsigned char );
-//void lcdInit(void);
+#define LCD_DDRAM           7	//DB7: set DD RAM address
+
+// cursor position to DDRAM mapping
+#define LCD_LINE0_DDRAMADDR		0x00
+#define LCD_LINE1_DDRAMADDR		0x40
+#define LCD_LINE2_DDRAMADDR		0x14
+#define LCD_LINE3_DDRAMADDR		0x54
+
+
+void lcd_gotoxy(unsigned char  ,unsigned char );
+
 void lcd_init(void);
-void lcdCmd(unsigned char);
+void lcd_cmd(unsigned char);
 void lcdData(unsigned char);
 void lcdWriteNibble(unsigned char);
 void waitlcd(unsigned char);
