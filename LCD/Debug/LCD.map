@@ -444,10 +444,10 @@ END GROUP
  .debug_abbrev  0x00000000      0x196 lcd16.o
  .debug_abbrev  0x00000196      0x150 LCD.o
 
-.debug_line     0x00000000      0x3cc
+.debug_line     0x00000000      0x3d9
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x26c lcd16.o
- .debug_line    0x0000026c      0x160 LCD.o
+ .debug_line    0x00000000      0x279 lcd16.o
+ .debug_line    0x00000279      0x160 LCD.o
 
 .debug_frame    0x00000000      0x108
  *(.debug_frame)

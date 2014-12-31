@@ -22,53 +22,7 @@ const uint8_t LcdCustomChar[] PROGMEM=//define 8 custom LCD chars
 	0x18, 0x1C, 0x1E, 0x1F, 0x1E, 0x1C, 0x18, 0x00  // 7. fast-forward arrow
 };
 
-/*
-void lcdcmd(unsigned char Data)
-{
 
-	PORTB &= ~RS; //because sending command
-	PORTB  &=~EN;
-	PORTB &=~RW;
-	PORTB &= 0x0f;
-
-	PORTB |= ((Data ) & 0xf0);
-	PORTB &=~RW;
-	PORTB  |=EN;
-	_delay_ms(2);
-	PORTB  &=~EN;
-
-	PORTB &= 0x0f;
-
-	PORTB  |= ((Data<<4) &  0xf0);
-	PORTB  |=EN;
-	_delay_ms(2);
-	PORTB  &=~EN;
-
-
-}
-*/
-/*
-void lcdData(unsigned char l)
-{
-	LCP |=RS;  //because sending data
-	LCP &=~RW;
-	LCP  &=~EN;
-	LDP &= 0x0f;
-	LDP |=((l ) & 0xf0);
-	LCP &=~RW;
-	LCP  |=EN;
-	_delay_ms(2);
-	LCP  &=~EN;
-	LDP &= 0x0f;
-	LDP  |= ((l<<4) &  0xf0);
-	LCP  |=EN;
-	_delay_ms(2);
-	LCP  &=~EN;
-
-
-
-}
-*/
 
 void lcd_cmd(unsigned char cmd)	//Sends Command to LCD
 {
