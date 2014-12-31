@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-CFile1.c
-
 lcd16.c
 
 LCD.c

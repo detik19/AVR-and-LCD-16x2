@@ -19,31 +19,34 @@ int main(void)
 		
 	
 	unsigned int temp;
-	DDRA = 0xFE;		//set the PORTA Direction Set every pin of PORTA as out except AN0 
+	
 	DDRB = 0xFF;		//set the PORTB Direction Set every pin of PORTB as out as our lcd on this
 	
 
 	
 	
-	lcdInit();
-
+	lcd_init();
+	lcd_clear();
 
 	prints("LCD ATMEGA16");
 	_delay_ms(500);
-    	while(1)
-    	{	
+    //	while(1)
+    //	{	
 		
-		ADCSRA |= 0x40;			// start the adc conversion on AN0
-		while(ADCSRA & 0x40);
-		temp = ADC;
+		
+		
+		temp = 12;
 
 		gotoXy(1,1 );			//set the cursor to 1 column of 1st row
-		prints("ADC = ");		
+		prints("Hay!");		
 		integerToLcd(temp);		// print adc value to the lcd
-
+		_delay_ms(500);
 		
-		_delay_ms(300);
+		lcd_clear();
+		prints("bersih123");
+		
+		_delay_ms(500);
 		
 	
-   	 }
+//   	 }
 }
